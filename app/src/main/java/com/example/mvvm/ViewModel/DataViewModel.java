@@ -10,4 +10,13 @@ import java.util.ArrayList;
 
 public class DataViewModel extends ViewModel {
 
+    MutableLiveData<ArrayList<DataModel>> mutableLiveData = new MutableLiveData<>();
+
+    public void setData(ArrayList<DataModel> arrayList) {
+        mutableLiveData.setValue(arrayList);
+    }
+
+    public MutableLiveData<ArrayList<DataModel>> getData() {
+        return mutableLiveData;
+    }
 }
