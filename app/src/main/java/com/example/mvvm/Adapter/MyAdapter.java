@@ -68,7 +68,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.roll.setText("Roll : " + dataModel.getRoll());
         holder.regestarion.setText("Reg : " + dataModel.getRegestarion());
         holder.faherName.setText("Father Name : " + dataModel.getFaherName());
-        holder.school.setText("School : " + dataModel.getSchool());
+        holder.school.setText("School : " + dataModel.getSchool()+"  position:-"+position);
         holder.gmail.setText("Gmail : " + dataModel.getGmail());
         holder.number.setText("Number : " + dataModel.getNumber());
 

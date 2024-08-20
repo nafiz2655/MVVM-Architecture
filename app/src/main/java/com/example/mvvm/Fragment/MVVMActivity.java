@@ -29,10 +29,10 @@ import java.util.ArrayList;
 
 public class MVVMActivity extends Fragment {
 
+    ;
     RecyclerView recyclerView;
-    ArrayList<DataModel> arrayList = new ArrayList<>();
-    ProgressBar progress;
     MyAdapter myAdapter;
+    ProgressBar progressBar;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -40,49 +40,21 @@ public class MVVMActivity extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mvvmactivity, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
-        progress = view.findViewById(R.id.progress);
+        progressBar = view.findViewById(R.id.progress);
 
-        myAdapter = new MyAdapter(getActivity(), arrayList);
-        recyclerView.setAdapter(myAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        progressBar.setVisibility(View.VISIBLE);
 
-        GetDataInFirebase();
+        DataViewModel dataViewModel = new ViewModelProvider(this).get(DataViewModel.class);
+
+        dataViewModel.getDataModelList().observe(getActivity(), dataModels -> {
+            if (dataModels != null) {
+                myAdapter = new MyAdapter(getActivity(),dataModels);
+                recyclerView.setAdapter(myAdapter);
+                myAdapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.GONE);
+            }
+        });
 
         return view;
     }
-
-
-    private void GetDataInFirebase () {
-
-        progress.setVisibility(View.VISIBLE);
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Data");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    DataModel dataModel = dataSnapshot.getValue(DataModel.class);
-                    arrayList.add(dataModel);
-
-                }
-
-                myAdapter.notifyDataSetChanged();
-                progress.setVisibility(View.GONE);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                progress.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), "Something Wrong Error", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @Override
-    public void onDestroy () {
-        Toast.makeText(getActivity(), "Distroy", Toast.LENGTH_SHORT).show();
-
-        super.onDestroy();
-    }
-
 }
